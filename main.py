@@ -8,7 +8,7 @@ import random
 load_dotenv()
 
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='&')
 
 
 @bot.listen('on_message')
@@ -27,6 +27,9 @@ async def yostuff(message):
 
     if message.content.startswith('pog'):
         await message.channel.send('https://www.nme.com/wp-content/uploads/2021/01/pogchamp-twitch-696x442.jpg')
+
+    if message.content.startswith('aqua'):
+        await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
 
 
 @bot.event
