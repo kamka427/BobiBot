@@ -31,6 +31,9 @@ async def yostuff(message):
     if message.content.startswith('aqua'):
         await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
 
+    if message.content.startswith('v'):
+        await message.channel.send('guys v?')
+
 
 @bot.event
 async def on_ready():
@@ -40,28 +43,28 @@ async def on_ready():
 
 
 @bot.command()
-async def repeat(ctx, times: int, content='repeating...'):
-    """Repeats a message multiple times."""
+async def repeat(cont, times: int, content='Repeating...'):
+    """Tobbszor megismetel egy uzenetet."""
     for i in range(times):
-        await ctx.send(content)
+        await cont.send(content)
 
 
-@bot.command(description='For when you wanna settle the score some other way')
-async def choose(ctx, *choices: str):
-    """Chooses between multiple choices."""
-    await ctx.send(random.choice(choices))
+@bot.command(description='Nem tudsz valamit eldonteni?')
+async def choose(cont, *choices: str):
+    """Egyet valaszt a lehetosegekbol."""
+    await cont.send(random.choice(choices))
 
 
 @bot.command()
-async def roll(ctx, dice: str):
-    """Rolls a dice in NdN format."""
+async def roll(cont, dice: str):
+    """Rolls a dice in N*N format."""
     try:
-        rolls, limit = map(int, dice.split('d'))
+        rolls, limit = map(int, dice.split('*'))
     except Exception:
-        await ctx.send('Format has to be in NdN!')
+        await cont.send('Format has to be in N*N!')
         return
 
     result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-    await ctx.send(result)
+    await cont.send(result)
 
 bot.run(os.getenv('TOKEN'))
