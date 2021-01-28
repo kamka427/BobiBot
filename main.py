@@ -1,15 +1,24 @@
+from discord.utils import get
+from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 import os
 import discord
 from discord.ext import commands
 import praw
 import random
-
+import youtube_dl
+import asyncio
 
 load_dotenv()
 
 
 bot = commands.Bot(command_prefix='&')
+
+reddit = praw.Reddit(client_id=os.getenv('CLIENTID'),
+                     client_secret=os.getenv('CLIENTSECRET'),
+                     user_agent=os.getenv('USERAGENT'))
+
+players = {}
 
 
 @bot.event
@@ -47,31 +56,20 @@ async def yostuff(message, user: discord.Member = None):
     if message.content.startswith('rahim'):
         await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804093858005647400/Cd7DPJqWEAEcRm9.jpg')
 
-    # if message.content == 'diktator':
-    #     await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
+    if message.content == 'diktator':
+        await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
 
-    # if "sadgest" in message.content:
-    #     await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
+    if "sadgest" in message.content:
+        await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
 
-
-# @bot.event
-# async def on_message(message):
-#     # No infinite bot loops
-#     if message.author == bot.user or message.author.bot:
-#         return
-
-#     mention = message.author.mention
-#     response = f"{mention}, get yo a$$ here!"
-#     await message.channel.send(response)
-# @bot.command(name='ping', help='Ping the bot to text name')
-# async def ping(ctx):
-#     # await ctx.send('Pong {0}'.format(ctx.author))
-#     await ctx.send(format(ctx.author.display_name) + " get yo a$$ here!")
-#     # print("debug: " + dir(ctx.author))
-# @bot.command()
-# async def sadgest(ctx, *, user: discord.Member = None):
-#     # if user == "Sadgest":
-#     await ctx.send(f"{user.mention}, get yo a$$ here! " + 'https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }],
+}
 
 
 @bot.command()
@@ -85,44 +83,39 @@ async def m(ctx, *, user: discord.Member = None):
 
 
 @bot.command()
-async def repeat(cont, times: int, content='Repeating...'):
+async def repeat(ctx, times: int, content='Repeating...'):
     """Tobbszor megismetel egy uzenetet."""
     for i in range(times):
-        await cont.send(content)
+        await ctx.send(content)
 
 
 @bot.command(description='Nem tudsz valamit eldonteni?')
-async def choose(cont, *choices: str):
+async def choose(ctx, *choices: str):
     """Egyet valaszt a lehetosegekbol."""
-    await cont.send(random.choice(choices))
+    await ctx.send(random.choice(choices))
 
 
 @bot.command()
-async def roll(cont, dice: str):
+async def roll(ctx, dice: str):
     """Rolls a dice in N*N format."""
     try:
         rolls, limit = map(int, dice.split('*'))
     except Exception:
-        await cont.send('Format has to be in N*N!')
+        await ctx.send('Format has to be in N*N!')
         return
 
     result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-    await cont.send(result)
-
-
-reddit = praw.Reddit(client_id=os.getenv('CLIENTID'),
-                     client_secret=os.getenv('CLIENTSECRET'),
-                     user_agent=os.getenv('USERAGENT'))
+    await ctx.send(result)
 
 
 @bot.command()
-async def hotmeme(cont):
+async def hotmeme(ctx):
     memes_submissions = reddit.subreddit('memes').hot()
     post_to_pick = random.randint(1, 10)
     for i in range(0, post_to_pick):
         submission = next(x for x in memes_submissions if not x.stickied)
 
-    await cont.send(submission.url)
+    await ctx.send(submission.url)
 
 
 @bot.command(aliases=['Meme'])
@@ -153,5 +146,78 @@ async def peepo(ctx):
 async def r(ctx, name):
     submission = reddit.subreddit(name).random()
     await ctx.send(submission.url)
+
+
+@bot.command()
+async def play(ctx, *, url: str):
+    song_there = os.path.isfile("song.mp3")
+    try:
+        if song_there:
+            os.remove("song.mp3")
+    except PermissionError:
+        await ctx.send("Wait for the current playing music to end or use the 'stop' command")
+        return
+
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels)
+    await voiceChannel.connect()
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+
+    ydl_opts = {
+        'default_search': 'auto',
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+        await ctx.send(f'**Playing: **{url}')
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, "song.mp3")
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+    while voiceChannel.is_playing():
+        await asyncio.sleep(1)
+    else:
+        await voiceChannel.disconnect()
+        print("Disconnected")
+
+
+@bot.command()
+async def leave(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_connected():
+        await voice.disconnect()
+    else:
+        await ctx.send("The bot is not connected to a voice channel.")
+
+
+@bot.command()
+async def pause(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_playing():
+        voice.pause()
+    else:
+        await ctx.send("Currently no audio is playing.")
+
+
+@bot.command()
+async def resume(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_paused():
+        voice.resume()
+    else:
+        await ctx.send("The audio is not paused.")
+
+
+@bot.command()
+async def stop(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
+    await voice.disconnect()
+    print("Disconnected")
 
 bot.run(os.getenv('TOKEN'))
