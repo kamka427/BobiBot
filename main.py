@@ -319,8 +319,9 @@ async def r(ctx, name):
 
 #############################################
 ytdlopts = {
-    'format': 'bestaudio/best',
+    'format': 'bestaudio',
     'default_search': 'auto',
+    #'source_address': '192.168.0.14'
     # 'restrictfilenames': True,
     # 'noplaylist': True,
     # 'nocheckcertificate': True,
@@ -332,10 +333,10 @@ ytdlopts = {
     # 'source_address': '0.0.0.0'  # ipv6 addresses cause issues sometimes
 }
 
-ffmpegopts = {
-    'before_options': '-nostdin',
-    'options': '-vn'
-}
+# ffmpegopts = {
+#     'before_options': '-nostdin',
+#     'options': '-vn'
+# }
 
 ytdl = YoutubeDL(ytdlopts)
 
