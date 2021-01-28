@@ -8,14 +8,8 @@ import praw
 import random
 import youtube_dl
 import asyncio
-from youtube_dl import YoutubeDL
-from functools import partial
 from async_timeout import timeout
-import traceback
-import sys
 import itertools
-from discord.utils import get
-from discord import FFmpegPCMAudio
 
 
 load_dotenv()
@@ -322,6 +316,7 @@ class VoiceState:
     def __init__(self, bot: commands.Bot, ctx: commands.Context):
         self.bot = bot
         self._ctx = ctx
+        self.exists = True
 
         self.current = None
         self.voice = None
@@ -371,6 +366,7 @@ class VoiceState:
                         self.current = await self.songs.get()
                 except asyncio.TimeoutError:
                     self.bot.loop.create_task(self.stop())
+                    self.exists = False
                     return
 
             self.current.source.volume = self._volume
@@ -406,7 +402,7 @@ class Music(commands.Cog):
 
     def get_voice_state(self, ctx: commands.Context):
         state = self.voice_states.get(ctx.guild.id)
-        if not state:
+        if not state or not state.exists:
             state = VoiceState(self.bot, ctx)
             self.voice_states[ctx.guild.id] = state
 
