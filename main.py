@@ -1,3 +1,5 @@
+import ctypes
+import ctypes.util
 import math
 import functools
 from dotenv import load_dotenv
@@ -50,28 +52,26 @@ async def yostuff(message, user: discord.Member = None):
     if message.content.startswith('aqua'):
         await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
 
-    if message.content.startswith('v'):
+    if message.content == 'v':
         await message.channel.send('guys v?')
 
     if message.content.startswith('rahim'):
         await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804093858005647400/Cd7DPJqWEAEcRm9.jpg')
 
-    if message.content == 'diktator':
-        await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
-
-    if "sadgest" in message.content:
-        await message.channel.send('https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
-
-    if "rr" in message.content:
+    if message.content == 'rr':
         await message.channel.send('https://discord.gg/rcRzaQKWKX')
+
+    if "gacha" in message.content:
+        await message.channel.send('game king')
+
+    if message.content == 'lolpatch':
+        await message.channel.send('https://na.leagueoflegends.com/en-us/news/tags/patch-notes')
 
 
 @bot.command()
 async def m(ctx, *, user: discord.Member = None):
     if user:
         await ctx.send(f"{user.mention}, get yo a$$ here!")
-    elif user == "Sadgest":
-        await ctx.send(f"{user.mention}, get yo a$$ here! " + 'https://cdn.discordapp.com/attachments/546393279827017729/804124792831082506/ayykos.png')
     else:
         await ctx.send('You have to say who needs to get his/her a$$ here!')
 
@@ -161,7 +161,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         'audioformat': 'mp3',
         'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
         'restrictfilenames': True,
-        'noplaylist': True,
+        'noplaylist': False,
         'nocheckcertificate': True,
         'ignoreerrors': False,
         'logtostderr': False,
@@ -316,12 +316,13 @@ class VoiceState:
     def __init__(self, bot: commands.Bot, ctx: commands.Context):
         self.bot = bot
         self._ctx = ctx
-        self.exists = True
 
         self.current = None
+        self.now = None
         self.voice = None
         self.next = asyncio.Event()
         self.songs = SongQueue()
+        self.exists = True
 
         self._loop = False
         self._volume = 0.5
@@ -369,13 +370,29 @@ class VoiceState:
                     self.exists = False
                     return
 
-            self.current.source.volume = self._volume
-            self.voice.play(self.current.source, after=self.play_next_song)
-            await self.current.source.channel.send(embed=self.current.create_embed())
+                self.current.source.volume = self._volume
+                self.voice.play(self.current.source, after=self.play_next_song)
+                await self.current.source.channel.send(embed=self.current.create_embed())
+
+            elif self.loop:
+
+                self.now = discord.FFmpegPCMAudio(
+                    self.current.source.stream_url, **YTDLSource.FFMPEG_OPTIONS)
+                #self.now.source.volume = self._volume
+                self.voice.play(self.now,
+                                after=self.play_next_song)
 
             await self.next.wait()
 
+            # If the song is looped
+
+            #     self.voice.play(self.current.source,
+            #                     after=self.play_next_song)
+
+            # await self.next.wait()
+
     def play_next_song(self, error=None):
+
         if error:
             raise VoiceError(str(error))
 
@@ -475,7 +492,12 @@ class Music(commands.Cog):
         if 0 > volume > 100:
             return await ctx.send('Volume must be between 0 and 100')
 
-        ctx.voice_state.volume = volume / 100
+        ctx.voice_client.source.volume = volume / 100
+        #ctx.voice_client.volume = volume / 100
+        #ctx.voice_client.now.volume = volume / 100
+        # ctx.voice_state.volume = volume / 100
+        #ctx.now.volume = volume / 100
+        # ctx.voice_state.volume = volume / 100
         await ctx.send('Volume of the player set to {}%'.format(volume))
 
     @commands.command(name='now', aliases=['current', 'playing'])
@@ -484,23 +506,71 @@ class Music(commands.Cog):
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
+    # @commands.command()
+    # async def pause(self, ctx):
+    #     if ctx.voice_client.is_playing():
+    #         ctx.voice_client.pause()
+    #     else:
+    #         await ctx.send("Currently no audio is playing.")
+
+    # @commands.command()
+    # async def resume(self, ctx):
+    #     if ctx.voice_client.is_paused():
+    #         ctx.voice_client.resume()
+    #     else:
+    #         await ctx.send("The audio is not paused.")
+
     @commands.command(name='pause')
-    @commands.has_permissions(manage_guild=True)
+    # @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: commands.Context):
         """Pauses the currently playing song."""
 
-        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
-            ctx.voice_state.voice.pause()
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.pause()
             await ctx.message.add_reaction('⏯')
+        else:
+            await ctx.send("Currently no audio is playing.")
 
     @commands.command(name='resume')
-    @commands.has_permissions(manage_guild=True)
+    # @commands.has_permissions(manage_guild=True)
     async def _resume(self, ctx: commands.Context):
         """Resumes a currently paused song."""
-
-        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
-            ctx.voice_state.voice.resume()
+        if ctx.voice_client.is_paused():
+            ctx.voice_client.resume()
             await ctx.message.add_reaction('⏯')
+        else:
+            await ctx.send("The audio is not paused.")
+
+    # @commands.command(name='pause')
+    # @commands.has_permissions(manage_guild=True)
+    # async def _pause(self, ctx: commands.Context):
+    #     """Pauses the currently playing song."""
+
+    #     if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
+    #         ctx.voice_state.voice.pause()
+    #         await ctx.message.add_reaction('⏯')
+
+    # @commands.command(name='resume')
+    # @commands.has_permissions(manage_guild=True)
+    # async def _resume(self, ctx: commands.Context):
+    #     """Resumes a currently paused song."""
+
+    #     if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
+    #         ctx.voice_state.voice.resume()
+    #         await ctx.message.add_reaction('⏯')
+
+    # @commands.command()
+#     async def pause(self, ctx):
+#         if ctx.voice_client.is_playing():
+#             ctx.voice_client.pause()
+#         else:
+#             await ctx.send("Currently no audio is playing.")
+#     @commands.command()
+#     async def resume(self, ctx):
+#         if ctx.voice_client.is_paused():
+#             ctx.voice_client.resume()
+#         else:
+#             await ctx.send("The audio is not paused.")
 
     @commands.command(name='stop')
     @commands.has_permissions(manage_guild=True)
@@ -584,6 +654,12 @@ class Music(commands.Cog):
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction('✅')
 
+    @commands.command()
+    async def stop1(self, ctx):
+        """Stops and disconnects the bot from voice"""
+
+        await ctx.voice_client.disconnect()
+
     @commands.command(name='loop')
     async def _loop(self, ctx: commands.Context):
         """Loops the currently playing song.
@@ -632,10 +708,56 @@ class Music(commands.Cog):
                 raise commands.CommandError(
                     'Bot is already in a voice channel.')
 
+    @commands.command(name='search')
+    async def _search(self, ctx: commands.Context, *, search: str):
+        """Searches youtube.
+        It returns an imbed of the first 10 results collected from youtube.
+        Then the user can choose one of the titles by typing a number
+        in chat or they can cancel by typing "cancel" in chat.
+        Each title in the list can be clicked as a link.
+        """
+        async with ctx.typing():
+            try:
+                source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop)
+            except YTDLError as e:
+                await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
+            else:
+                if source == 'sel_invalid':
+                    await ctx.send('Invalid selection')
+                elif source == 'cancel':
+                    await ctx.send(':white_check_mark:')
+                elif source == 'timeout':
+                    await ctx.send(':alarm_clock: **Time\'s up bud**')
+                else:
+                    if not ctx.voice_state.voice:
+                        await ctx.invoke(self._join)
+
+                    song = Song(source)
+                    await ctx.voice_state.songs.put(song)
+                    await ctx.send('Enqueued {}'.format(str(source)))
+
+    @_join.before_invoke
+    @_play.before_invoke
+    async def ensure_voice_state(self, ctx: commands.Context):
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            raise commands.CommandError(
+                'You are not connected to any voice channel.')
+
+        if ctx.voice_client:
+            if ctx.voice_client.channel != ctx.author.voice.channel:
+                raise commands.CommandError(
+                    'Bot is already in a voice channel.')
 
 
 bot.add_cog(Music(bot))
 
 
+@bot.command(name='botstop', aliases=['bstop'])
+@commands.is_owner()
+async def botstop(ctx):
+    print('Goodbye')
+    await ctx.send('Goodbye')
+    await bot.logout()
+    return
 
 bot.run(os.getenv('TOKEN'))

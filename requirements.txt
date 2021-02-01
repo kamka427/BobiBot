@@ -1,1 +1,6 @@
-discord.py
+pip
+youtube_dl
+discord.py[voice] ~= 1.4.0
+ffmpeg
+colorlog
+PyNaCl
