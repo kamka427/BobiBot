@@ -4,3 +4,4 @@ discord.py[voice] ~= 1.4.0
 ffmpeg
 colorlog
 PyNaCl
+praw

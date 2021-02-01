@@ -14,7 +14,7 @@ from async_timeout import timeout
 import itertools
 
 
-#load_dotenv()
+# load_dotenv()
 
 
 bot = commands.Bot(command_prefix='&')
