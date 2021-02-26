@@ -2,7 +2,7 @@ import ctypes
 import ctypes.util
 import math
 import functools
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 import discord
 from discord.ext import commands
@@ -14,7 +14,7 @@ from async_timeout import timeout
 import itertools
 
 
-# load_dotenv()
+load_dotenv()
 
 
 bot = commands.Bot(command_prefix='&')
@@ -127,9 +127,9 @@ async def saber(ctx):
 @bot.command(aliases=['Waifu'])
 async def waifu(ctx):
     submission = reddit.subreddit("Waifu").random()
-    await ctx.send(submission.url)
-    await ctx.add_reaction(":heart:")
-    await ctx.send("She is a " + random.randint(1, 5) + "star waifu!")
+    m = await ctx.send(submission.url)
+    await m.add_reaction("❤")
+    await ctx.send("She is a " + str(random.randint(1, 5)) + " star waifu!")
 
 
 @bot.command(aliases=['Trap'])
@@ -145,8 +145,8 @@ async def peepo(ctx):
 
 
 @bot.command(aliases=['Movie'])
-async def Movie(ctx):
-    submission = reddit.subreddit("FullMovieGifs").random()
+async def movie(ctx):
+    submission = reddit.subreddit("trailers").random()
     await ctx.send(submission.url)
 
 
@@ -158,7 +158,12 @@ async def r(ctx, name):
 
 @bot.command(aliases=['Husbando'])
 async def husbando(ctx, name):
-    await ctx.send(name + ",you are a " + random.randint(1, 5) + "star husbando!")
+    await ctx.send(name + " ,you are a " + str(random.randint(1, 5)) + " star husbando!")
+
+
+@bot.command(aliases=['Waifure'])
+async def waifure(ctx, name):
+    await ctx.send(name + " is a " + str(random.randint(1, 5)) + " star waifu!")
 
 ########################################################################################################################################################################
 # Silence useless bug reports messages
