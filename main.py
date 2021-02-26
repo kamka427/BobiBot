@@ -3,7 +3,7 @@ import ctypes
 import ctypes.util
 import math
 import functools
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 import discord
 from discord.ext import commands
@@ -16,7 +16,7 @@ from async_timeout import timeout
 import itertools
 
 
-load_dotenv()
+# load_dotenv()
 
 
 bot = commands.Bot(command_prefix='&')
