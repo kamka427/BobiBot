@@ -71,7 +71,7 @@ async def yostuff(message, user: discord.Member = None):
 @bot.command()
 async def m(ctx, *, user: discord.Member = None):
     if user:
-        await ctx.send(f"{user.mention}, get yo a$$ here!")
+        await ctx.send(f"{user.mention}, get yo A$$ here!")
     else:
         await ctx.send('You have to say who needs to get his/her a$$ here!')
 
@@ -124,6 +124,14 @@ async def saber(ctx):
     await ctx.send(submission.url)
 
 
+@bot.command(aliases=['Waifu'])
+async def waifu(ctx):
+    submission = reddit.subreddit("Waifu").random()
+    await ctx.send(submission.url)
+    await ctx.add_reaction(":heart:")
+    await ctx.send("She is a " + random.randint(1, 5) + "star waifu!")
+
+
 @bot.command(aliases=['Trap'])
 async def trap(ctx):
     submission = reddit.subreddit("astolfo").random()
@@ -136,10 +144,21 @@ async def peepo(ctx):
     await ctx.send(submission.url)
 
 
+@bot.command(aliases=['Movie'])
+async def Movie(ctx):
+    submission = reddit.subreddit("FullMovieGifs").random()
+    await ctx.send(submission.url)
+
+
 @bot.command(aliases=['Reddit'])
 async def r(ctx, name):
     submission = reddit.subreddit(name).random()
     await ctx.send(submission.url)
+
+
+@bot.command(aliases=['Husbando'])
+async def husbando(ctx, name):
+    await ctx.send(name + ",you are a " + random.randint(1, 5) + "star husbando!")
 
 ########################################################################################################################################################################
 # Silence useless bug reports messages
