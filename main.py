@@ -1,3 +1,4 @@
+from musicbot import MusicBot
 import ctypes
 import ctypes.util
 import math
@@ -6,6 +7,7 @@ from dotenv import load_dotenv
 import os
 import discord
 from discord.ext import commands
+allow_requests = True
 import praw
 import random
 import youtube_dl
@@ -164,6 +166,9 @@ async def husbando(ctx, name):
 @bot.command(aliases=['Waifure'])
 async def waifure(ctx, name):
     await ctx.send(name + " is a " + str(random.randint(1, 5)) + " star waifu!")
+
+# m = MusicBot()
+# m.run()
 
 ########################################################################################################################################################################
 # Silence useless bug reports messages
