@@ -7,3 +7,4 @@ PyNaCl
 asyncpraw
 spotipy
 TikTokApi
+selenium
