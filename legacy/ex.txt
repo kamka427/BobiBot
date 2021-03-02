@@ -1,0 +1,55 @@
+async def audio_player_task(self):
+    while True: 
+        self.next.clear() 
+ if self.voice and not self.loop: 
+    # Try to get the next song within 3 minutes. 
+    # If no song will be added to the queue in time, 
+    # the player will disconnect due to performance 
+    # reasons. 
+    try: 
+        async with timeout(180):  # 3 minutes 
+
+self.current = await self.songs.get() 
+    except asyncio.TimeoutError: 
+        self.bot.loop.create_task(self.stop()) 
+        #return 
+ if (self.current): 
+    self.current.source.volume = self._volume 
+    self.voice.play(self.current.source, after=self.play_next_song) 
+    await self.current.source.channel.send(embed=self.current.create_embed()) 
+ await self.next.wait() 
+#else: 
+#    await asyncio.sleep(1)     def play_next_song(self, error=None):        if self.current: 
+if self.loop: 
+    self.current.source.source = discord.FFmpegPCMAudio(self.current.source.filename) 
+    self.current.source.frames = 0 
+else: 
+    filename = self.current.source.filename 
+    print("play_next_song - Deleting file: {}".format(os.path.relpath(filename))) 
+    for x in range(30): 
+        try: 
+ 
+os.unlink(filename) 
+ 
+print('play_next_song - File deleted: {0}'.format(filename)) 
+ 
+break 
+        except PermissionError as e: 
+ 
+if e.winerror == 32:  # File is in use 
+ 
+    print('play_next_song - Can\'t delete file, it is currently in use: {0}'.format(filename)) 
+        except FileNotFoundError: 
+ 
+print('play_next_song - Could not find delete {} as it was not found. Skipping.'.format(filename), exc_info=True) 
+ 
+break 
+        except Exception: 
+ 
+print("play_next_song - Error trying to delete {}".format(filename), exc_info=True) 
+ 
+break 
+    else: 
+        print("play_next_song - Could not delete file {}, giving up and moving on".format(os.path.relpath(filename))) 
+     self.current = None         if error: 
+raise VoiceError(str(error))         self.next.set()
