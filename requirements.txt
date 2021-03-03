@@ -8,3 +8,4 @@ asyncpraw
 spotipy
 PyTikTokAPI
 pathlib
+nest_asyncio
