@@ -5,16 +5,16 @@ from TikTokApi import TikTokApi
 import random
 import string
 from random import randint
-from selenium import webdriver
-import os
+# from selenium import webdriver
+# import os
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--no-sandbox")
-driver = webdriver.Chrome(executable_path=os.environ.get(
-    "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+# chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--disable-dev-shm-usage")
+# chrome_options.add_argument("--no-sandbox")
+# driver = webdriver.Chrome(executable_path=os.environ.get(
+#     "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 
 class TikTok(commands.Cog):
@@ -29,12 +29,12 @@ class TikTok(commands.Cog):
         api = TikTokApi.get_instance(
             use_selenium=True, custom_verifyFp=verifyFp, custom_did=did)
         # print(api.trending())
-        count = 100
+        count = 50
         tiktoks = api.trending(count=count)
         Path("downloads").mkdir(exist_ok=True)
         n = 1
         for i in range(n):
-            r = randint(1, 99)
+            r = randint(0, 49)
             data = api.get_Video_By_TikTok(tiktoks[r])  # bytes of the video
             with open("downloads/video.mp4".format(str(r)), 'wb') as output:
                 output.write(data)
