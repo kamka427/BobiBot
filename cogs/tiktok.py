@@ -5,6 +5,11 @@ from TikTokApi import TikTokApi
 import random
 import string
 from random import randint
+from selenium import webdriver
+
+# Optional argument, if not specified will search path.
+driver = webdriver.Chrome('chromedriver')
+driver.get('http://www.google.com/')
 # from selenium import webdriver
 # import os
 
