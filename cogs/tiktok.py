@@ -8,7 +8,6 @@ from random import randint
 from pprint import pprint
 from TikTokAPI import TikTokAPI
 import nest_asyncio
-# nest_asyncio.apply()
 
 # from selenium import webdriver
 
