@@ -6,7 +6,7 @@ import os
 import asyncpraw
 # load_dotenv()  # !
 # nest_asyncio.apply()
-
+#by Kamka
 cogs = [
     'music', 'reddit', 'messages', 'tiktok'
 ]
