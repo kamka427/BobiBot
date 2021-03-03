@@ -1,12 +1,14 @@
+# import nest_asyncio
 import discord
 # from dotenv import load_dotenv  # !
 from discord.ext import commands
 import os
 import asyncpraw
 # load_dotenv()  # !
+# nest_asyncio.apply()
 
 cogs = [
-    'music', 'reddit', 'messages'
+    'music', 'reddit', 'messages', 'tiktok'
 ]
 
 bot = commands.Bot(command_prefix="&", description="Bobi az ezermester")
@@ -17,7 +19,8 @@ reddit = asyncpraw.Reddit(client_id=os.getenv('CLIENTID'),
 if __name__ == '__main__':
     for name in cogs:
         bot.load_extension("cogs.{}".format(name))
-    
+
+
 @bot.event
 async def on_ready():
     print('Logged in as {0} ({0.id})'.format(bot.user))
