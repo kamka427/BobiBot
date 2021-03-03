@@ -9,13 +9,14 @@ from selenium.webdriver import Chrome
 from selenium import webdriver
 import os
 
-chrome_exec_shim = os.environ.get("GOOGLE_CHROME_BIN", "chromedriver")
-opts = webdriver.ChromeOptions()
-opts.binary_location = chrome_exec_shim
-opts.add_argument('--disable-gpu')
-opts.add_argument("--no-sandbox")
-driver = webdriver.Chrome(
-    executable_path='/chrome/chromedriver', chrome_options=opts)
+# chrome_exec_shim = os.environ.get("GOOGLE_CHROME_BIN", "chromedriver")
+# opts = webdriver.ChromeOptions()
+# opts.binary_location = chrome_exec_shim
+# opts.add_argument('--disable-gpu')
+# opts.add_argument("--no-sandbox")
+# driver = webdriver.Chrome(
+#     executable_path='/app/development/chromedriver', chrome_options=opts)
+
 
 class TikTok(commands.Cog):
 
