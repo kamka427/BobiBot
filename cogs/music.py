@@ -424,7 +424,7 @@ class Music(commands.Cog):
             await ctx.send("The audio is not paused.")
 
     @ commands.command(name='stop')
-    @ commands.has_permissions(manage_guild=True)
+    # @ commands.has_permissions(manage_guild=True)
     async def _stop(self, ctx: commands.Context):
         """Stops playing song and clears the queue."""
 
@@ -505,11 +505,11 @@ class Music(commands.Cog):
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction('✅')
 
-    @ commands.command()
-    async def stop1(self, ctx):
-        """Stops and disconnects the bot from voice"""
+    # @ commands.command()
+    # async def stop1(self, ctx):
+    #     """Stops and disconnects the bot from voice"""
 
-        await ctx.voice_client.disconnect()
+    #     await ctx.voice_client.disconnect()
 
     @ commands.command(name='loop')
     async def _loop(self, ctx: commands.Context):
