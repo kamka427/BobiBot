@@ -6,7 +6,7 @@ import asyncpraw
 # load_dotenv()  # !
 
 cogs = [
-    'music', 'reddit', 'tiktok', 'messages'
+    'music', 'reddit', 'messages'
 ]
 
 bot = commands.Bot(command_prefix="&", description="Bobi az ezermester")

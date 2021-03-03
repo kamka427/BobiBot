@@ -8,3 +8,4 @@ asyncpraw
 spotipy
 TikTokApi
 selenium
+pathlib
