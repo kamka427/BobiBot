@@ -6,5 +6,5 @@ colorlog
 PyNaCl
 asyncpraw
 spotipy
-TikTokAPI
+PyTikTokAPI
 pathlib
