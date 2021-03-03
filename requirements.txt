@@ -9,3 +9,6 @@ spotipy
 PyTikTokAPI
 pathlib
 nest_asyncio
+requests
+pyppeteer
+pyppeteer_stealth
