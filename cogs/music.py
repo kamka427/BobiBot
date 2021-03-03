@@ -26,13 +26,16 @@ class Spotify:
         while True:
             response = sp.playlist_tracks(pl_id,
                                           offset=offset,
-                                          fields='items.track.name,items.track.artist,total',
+                                          fields='items.track.name,total',
                                           additional_types=['track'])
 
             if len(response['items']) == 0:
                 break
 
+
             n = response['total']
+            for i in range(n):
+                print(response['items'])
 
             spots = []
 
