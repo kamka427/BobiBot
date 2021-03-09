@@ -43,8 +43,8 @@ class Messages(commands.Cog):
         if message.content == 'lolpatch':
             await message.channel.send('https://na.leagueoflegends.com/en-us/news/tags/ patch-notes')
 
-        if message.content.startswith('-p'):
-            await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
+        # if message.content.startswith('-p'):
+        #     await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
 
     @commands.command()
     async def m(self, ctx, *, user: discord.Member = None):
