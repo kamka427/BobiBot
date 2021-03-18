@@ -42,7 +42,7 @@ class Reddit(commands.Cog):
         submission = await subreddit.random()
         m = await ctx.send(submission.url)
         await m.add_reaction("❤")
-        await ctx.send("She is a " + str(random.randint(1, 5)) + " star     waifu!")
+        await ctx.send("She is a " + str(random.randint(1, 5)) + " star waifu!")
     
     @commands.command(aliases=['Trap'])
     async def trap(self, ctx):

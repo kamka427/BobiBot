@@ -378,7 +378,10 @@ class Music(commands.Cog):
 
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
-        await ctx.voice_client.disconnect()
+        try:
+            await ctx.voice_client.disconnect()
+        except:
+            await ctx.send('Bye!')
 
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):

@@ -24,25 +24,25 @@ class TikTok(commands.Cog):
     async def tik(self, ctx, name):
         try:
             nest_asyncio.apply()
-            user = api.getVideosByUserName(name, count=10)
-            video = user['items'][randint(0, 9)]['video']['id']
+            user = api.getVideosByUserName(name, count=20)
+            video = user['items'][randint(0, 19)]['video']['id']
             api.downloadVideoById(
                 video, './downloads/{}.mp4'.format((str("v"))))
             await ctx.send(file=discord.File('./downloads/v.mp4'))
         except:
-            print("Volt egy hiba...")
+            await ctx.send("Túl nagy videót találtam. 😢")
 
     @commands.command(aliases=['Tok'])
     async def tok(self, ctx, name):
         try:
             nest_asyncio.apply()
-            user = api.getVideosByHashTag(name, count=10)
-            video = user['itemList'][randint(0, 9)]['video']['id']
+            user = api.getVideosByHashTag(name, count=20)
+            video = user['itemList'][randint(0, 19)]['video']['id']
             api.downloadVideoById(
                 video, './downloads/{}.mp4'.format((str("v"))))
             await ctx.send(file=discord.File('./downloads/v.mp4'))
         except:
-            print("Volt egy hiba...")
+            await ctx.send("Túl nagy videót találtam. 😢")
 
 
 def setup(bot):
