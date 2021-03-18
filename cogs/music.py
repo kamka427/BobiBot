@@ -17,6 +17,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="SPOTIPY_CL
                                                            client_secret="SPOTIPY_CLIENT_SECRET"))
 
 sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
+
 class Spotify:
 
     def plistSearch(name):
@@ -31,7 +33,6 @@ class Spotify:
 
             if len(response['items']) == 0:
                 break
-
 
             n = response['total']
             for i in range(n):
@@ -524,7 +525,7 @@ class Music(commands.Cog):
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='play')
+    @commands.command(name='p')
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song.
         If there are songs in the queue, this will be queued until the
@@ -547,7 +548,7 @@ class Music(commands.Cog):
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
 
-    @commands.command(name='playspotify')
+    @commands.command(name='s')
     async def _play1(self, ctx: commands.Context, *, search: str):
         """Plays a song.
         If there are songs in the queue, this will be queued until the
@@ -564,7 +565,10 @@ class Music(commands.Cog):
             #     # pl_id = 'https://open.spotify.com/playlist/37i9dQZF1DX1LU4UHKqdtg?si = QzAoepuTRYCVG4ttN8peyA'
 
             #     # offset = 0
-            spots, n = Spotify.plistSearch(search)
+            try:
+                spots, n = Spotify.plistSearch(search)
+            except:
+                print("Volt egy hiba...")
 
             #     source = await YTDLSource.create_source(ctx, spots[0], loop=self.bot.loop)
             # except YTDLError as e:
@@ -578,13 +582,16 @@ class Music(commands.Cog):
 
             #     if len(response['items']) == 0:
             #         break
-            await ctx.send('Enqueued {} songs...'.format(str(n)))
-            for i in range(n):
-                source = await YTDLSource.create_source(ctx, spots[i], loop=self.bot.loop)
-                song = Song(source)
+            try:
+                await ctx.send('Enqueued {} songs...'.format(str(n)))
+                for i in range(n):
+                    source = await YTDLSource.create_source(ctx, spots[i], loop=self.bot.loop)
+                    song = Song(source)
 
-                await ctx.voice_state.songs.put(song)
+                    await ctx.voice_state.songs.put(song)
                 # await ctx.send('Enqueued {}'.format(str(source)))
+            except:
+                print("Volt egy hiba...")
 
     @ _join.before_invoke
     @ _play.before_invoke

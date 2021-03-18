@@ -22,21 +22,27 @@ class TikTok(commands.Cog):
 
     @commands.command(aliases=['Tik'])
     async def tik(self, ctx, name):
-        nest_asyncio.apply()
-        user = api.getVideosByUserName(name, count=10)
-        video = user['items'][randint(0, 9)]['video']['id']
-        api.downloadVideoById(
-            video, './downloads/{}.mp4'.format((str("v"))))
-        await ctx.send(file=discord.File('./downloads/v.mp4'))
+        try:
+            nest_asyncio.apply()
+            user = api.getVideosByUserName(name, count=10)
+            video = user['items'][randint(0, 9)]['video']['id']
+            api.downloadVideoById(
+                video, './downloads/{}.mp4'.format((str("v"))))
+            await ctx.send(file=discord.File('./downloads/v.mp4'))
+        except:
+            print("Volt egy hiba...")
 
     @commands.command(aliases=['Tok'])
     async def tok(self, ctx, name):
-        nest_asyncio.apply()
-        user = api.getVideosByHashTag(name, count=10)
-        video = user['itemList'][randint(0, 9)]['video']['id']
-        api.downloadVideoById(
-            video, './downloads/{}.mp4'.format((str("v"))))
-        await ctx.send(file=discord.File('./downloads/v.mp4'))
+        try:
+            nest_asyncio.apply()
+            user = api.getVideosByHashTag(name, count=10)
+            video = user['itemList'][randint(0, 9)]['video']['id']
+            api.downloadVideoById(
+                video, './downloads/{}.mp4'.format((str("v"))))
+            await ctx.send(file=discord.File('./downloads/v.mp4'))
+        except:
+            print("Volt egy hiba...")
 
 
 def setup(bot):

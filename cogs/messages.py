@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord
 import random
 
+
 class Messages(commands.Cog):
 
     def __init__(self, bot):
@@ -45,6 +46,9 @@ class Messages(commands.Cog):
 
         # if message.content.startswith('-p'):
         #     await message.channel.send('https://media.tenor.com/images/254629658d75071285e84502d71c67c1/tenor.gif')
+
+        if message.content == 'f':
+            await message.channel.send('fibidi fibidi')
 
     @commands.command()
     async def m(self, ctx, *, user: discord.Member = None):
