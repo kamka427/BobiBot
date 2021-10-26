@@ -61,6 +61,12 @@ class Reddit(commands.Cog):
         subreddit = await reddit.subreddit("trailers")
         submission = await subreddit.random()
         await ctx.send(submission.url)
+
+    @commands.command(aliases=['Egirl'])
+    async def egirl(self, ctx):
+        subreddit = await reddit.subreddit("egirl")
+        submission = await subreddit.random()
+        await ctx.send(submission.url)
     
     @commands.command(aliases=['Reddit'])
     async def r(self, ctx, name):

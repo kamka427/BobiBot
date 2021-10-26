@@ -2,3 +2,7 @@
 .gitignore
 downloads/video.mp4
 legacy/
+downloads/v.mp4
+cogs/__pycache__/
+.cache
+bobi/

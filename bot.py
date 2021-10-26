@@ -8,8 +8,10 @@ import asyncpraw
 # nest_asyncio.apply()
 #by Kamka
 cogs = [
-    'music', 'reddit', 'messages', 'tiktok'
+    'music', 'reddit', 'messages'
 ]
+
+# , 'tiktok'
 
 bot = commands.Bot(command_prefix="&", description="Bobi az ezermester")
 reddit = asyncpraw.Reddit(client_id=os.getenv('CLIENTID'),

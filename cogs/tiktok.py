@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 from pathlib import Path
 from random import randint
-from pprint import pprint
+# from pprint import pprint
 from TikTokAPI import TikTokAPI
 import nest_asyncio
 
